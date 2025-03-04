@@ -23,8 +23,3 @@ export interface DealMapped {
   type: string,
   marketingSource: string,
 }
-
-    // Missing fields:
-    // origin
-    // useCase
-    // deliveryModel
