@@ -1,0 +1,11 @@
+# sst
+.sst
+
+# config
+src/config.ts
+
+# node_modules
+node_modules
+
+# Jetbrains
+.idea/
