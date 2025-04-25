@@ -190,7 +190,7 @@ export class MigrateDealUseCaseImpl implements MigrateDealUseCase {
 
     // Map OpportunityCompany from Pipedrive organization
     for (const customFieldKey in organizationDefinition.custom_fields) {
-      const configField = globalConfig.organizationFieldsMapping.find((field) => field.pipedriveKey === customFieldKey);
+      const configField = globalConfig.companyFieldsMapping.find((field) => field.pipedriveKey === customFieldKey);
       if (!configField || configField.from !== 'organization') {
         continue;
       }
@@ -243,7 +243,7 @@ export class MigrateDealUseCaseImpl implements MigrateDealUseCase {
 
     // Map OpportunityCompany from Pipedrive deal
     for (const customFieldKey in dealDefiniton.custom_fields) {
-      const configField = globalConfig.organizationFieldsMapping.find((field) => field.pipedriveKey === customFieldKey);
+      const configField = globalConfig.companyFieldsMapping.find((field) => field.pipedriveKey === customFieldKey);
       if (!configField || configField.from !== 'deal') {
         continue;
       }
@@ -337,7 +337,7 @@ export class MigrateDealUseCaseImpl implements MigrateDealUseCase {
         continue;
       }
 
-      const configField = globalConfig.dealFieldsMapping.find((field) => field.pipedriveKey === customFieldKey);
+      const configField = globalConfig.opportunityFieldsMapping.find((field) => field.pipedriveKey === customFieldKey);
       if (!configField) {
         continue;
       }
