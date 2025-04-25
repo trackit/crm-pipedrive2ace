@@ -1,4 +1,4 @@
-export interface Deal {
+export interface PipedriveDeal {
   id: number,
   title: string,
   stage_id: number,
@@ -7,6 +7,9 @@ export interface Deal {
   expected_close_date: string,
   org_id: number,
   person_id: number,
+  won_time: string,
+  lost_time: string,
+  update_time: string,
   custom_fields: {
     [key: string]: {
       type: 'set',

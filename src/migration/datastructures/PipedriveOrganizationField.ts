@@ -1,4 +1,4 @@
-export interface DealField {
+export type PipedriveOrganizationField = {
   id: number,
   key: string,
   name: string,

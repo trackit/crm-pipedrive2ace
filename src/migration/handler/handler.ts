@@ -14,7 +14,7 @@ const pipedriveApi = new PipedriveAPIImpl(process.env.PIPEDRIVE_API_KEY);
 const useCase = new MigrateDealUseCaseImpl({
   pcsApi,
   pipedriveApi,
-})
+});
 
 const adapter = new MigrateDealAdapter({
   useCase

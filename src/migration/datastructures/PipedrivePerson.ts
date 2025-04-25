@@ -1,4 +1,4 @@
-export type Person = {
+export type PipedrivePerson = {
   id: number,
   email?: string,
   phone?: string,

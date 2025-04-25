@@ -12,6 +12,8 @@ export default $config({
   async run() {
     const infra = await import("./sst");
 
-    return infra.lambda.url;
+    return {
+      url: infra.lambda.url,
+    };
   },
 });

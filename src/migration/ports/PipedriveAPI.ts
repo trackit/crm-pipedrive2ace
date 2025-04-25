@@ -1,13 +1,16 @@
-import { DealField } from "../datastructures/DealField";
-import { Stage } from '../datastructures/Stage';
-import { Organization } from '../datastructures/Organization';
-import { Person } from '../datastructures/Person';
-import { OrganizationField } from '../datastructures/OrganizationField';
+import { PipedriveDealField } from "../datastructures/PipedriveDealField";
+import { PipedriveStage } from '../datastructures/PipedriveStage';
+import { PipedriveOrganization } from '../datastructures/PipedriveOrganization';
+import { PipedrivePerson } from '../datastructures/PipedrivePerson';
+import { PipedriveOrganizationField } from '../datastructures/PipedriveOrganizationField';
+import { PipedriveNote } from '../datastructures/PipedriveNote';
 
 export interface PipedriveAPI {
-  getDealFields: () => Promise<DealField[]>;
-  getStages: () => Promise<Stage[]>;
-  getOrganization: (id: number) => Promise<Organization>;
-  getOrganizationFields: () => Promise<OrganizationField[]>;
-  getPerson: (id: number) => Promise<Person>;
+  getDealFields: () => Promise<PipedriveDealField[]>;
+  getStages: () => Promise<PipedriveStage[]>;
+  getOrganization: (id: number) => Promise<PipedriveOrganization>;
+  getOrganizationFields: () => Promise<PipedriveOrganizationField[]>;
+  getPerson: (id: number) => Promise<PipedrivePerson>;
+  upsertNote: (dealId: number, noteId: number, text: string) => Promise<number>;
+  getNotes: (dealId: number) => Promise<PipedriveNote[]>;
 }

@@ -1,17 +1,18 @@
 {
-  "name": "pipedrive-crm",
+  "name": "pipedrive-to-aws-partner-central",
   "version": "1.0.0",
   "main": "index.ts",
+  "author": "Jules Klakosz",
   "devDependencies": {
     "@types/aws-lambda": "8.10.147",
     "@types/node": "^18",
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "deployti": "aws-vault exec tiprod -- npx sst deploy",
     "deploy": "npx sst deploy",
     "destroy": "npx sst destroy",
-    "dev": "npx sst dev"
+    "dev": "npx sst dev",
+    "secret": "npx sst secret set"
   },
   "dependencies": {
     "@aws-sdk/client-partnercentral-selling": "^3.734.0",

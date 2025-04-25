@@ -2,7 +2,7 @@ import { Opportunity } from '../datastructures/Opportunity';
 
 export type OpportunityIds = {
   id: string,
-  partnerId: string
+  partnerId: number
 }
 
 export type GetOpportunityIdsResult = {
@@ -11,6 +11,6 @@ export type GetOpportunityIdsResult = {
 };
 
 export interface PartnerCentralSellingAPI {
-  getOpportunityIds: (limit: number, nextToken?: string) => Promise<GetOpportunityIdsResult>;
-  upsertOpportunity: (opportunity: Opportunity) => Promise<void>;
+  getOpportunityIds: (catalog: string, limit: number, nextToken?: string) => Promise<GetOpportunityIdsResult>;
+  upsertOpportunity: (catalog: string, opportunity: Opportunity) => Promise<string>;
 }

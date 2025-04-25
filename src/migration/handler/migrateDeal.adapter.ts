@@ -27,19 +27,10 @@ export class MigrateDealAdapter {
       throw new BadRequestError()
     }
 
-    const body = JSON.parse(event.body);
+    const dealInfo = JSON.parse(event.body).data;
+    const catalog = dealInfo.title.startsWith('[TEST]') ? 'Sandbox' : 'AWS';
 
-    // TODO: TO REMOVE
-    if (!body.data.title.startsWith('[TEST]')) {
-      console.log('Deal not migrated');
-      console.log(body.data.title)
-      return {
-        statusCode: 403,
-        body: JSON.stringify({ message: 'Deal not migrated' }),
-      }
-    }
-
-    await this.useCase.migrateDeal({ dealInfo: body.data });
+    await this.useCase.migrateDeal({ dealInfo, catalog });
 
     return {
       statusCode: 200,
