@@ -1,15 +1,40 @@
-# Pipedrive CRM to AWS ACE
+<h1 align="center">Pipedrive2ACE Automation Tool</h1>
 
-## Overview
+<p align="center">
+  <b>Pipedrive2ACE</b> is a lambda webhook receiver that automates the process of entering Pipedrive deals into AWS Partner Central ACE Pipeline Manager.
+</p>
+
+<hr>
+
+<p align="center">
+  <a href="https://github.com/trackit/crm-pipedrive2ace/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/github/license/trackit/crm-pipedrive2ace"></a>
+  <a href="https://trackit.io/"><img alt="Website" src="https://img.shields.io/badge/website-trackit.io-blue"></a>
+</p>
+
+<hr>
+
+# Table of contents
+
+- [Overview](#overview)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Build](#build)
+  - [Deploy](#deploy)
+  - [Pipedrive Webhook](#pipedrive-webhook)
+- [Contributing](#contributing)
+- [License](#license)
+
+# Overview
 
 This repository allows you to connect Pipedrive CRM with AWS Partner Central ACE Pipeline Manager.
 It works with a lambda syncing Pipedrive deals to AWS ACE Pipeline Manager opportunities.
 
+# Getting Started
+
 ## Prerequisites
 
-### Configuration types
-
-Here are the types for the tool configuration.
+In order to use this tool, you will need to configure it depending on your pipedrive setup.
+Here are the types for the tool configuration:
 
 ```typescript
 // Represents a value match mapping.
@@ -138,7 +163,7 @@ export const globalConfig: GlobalConfig = {
 }
 ```
 
-## Installation
+## Build
 
 ### Dependencies
 
@@ -175,7 +200,7 @@ $> npm run secret <SECRET_NAME> <SECRET_VALUE>
 
 You need to do it for each secret.
 
-### Deployment using SST
+## Deploy
 
 Run:
 ```bash
@@ -184,7 +209,7 @@ $> npm run deploy
 to deploy the lambda function to AWS.
 The stack will output the Lambda function URL that you will need to create the webhook in Pipedrive.
 
-### Pipedrive Webhook
+## Pipedrive Webhook
 
 Go to Pipedrive > `Tools and Apps` > `Webhooks` > `+ Webhook` > `Webhook`
 
@@ -196,3 +221,25 @@ Select `Webhooks V2`, then Next and fill it like this:
 - Endpoint URL: `<LAMBDA_URL>` (the URL outputted by the SST deployment)
 - HTTP Auth username: `<AUTH_USERNAME>` (the username you set in the secrets)
 - HTTP Auth password: `<AUTH_PASSWORD>` (the password you set in the secrets)
+
+# Contributing
+
+We welcome contributions to the project.
+
+Please read our [contributing guidelines](./CONTRIBUTING.md) for more information on how to get started.
+
+# License
+
+Copyright 2025 TrackIt
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  [LICENSE](./LICENSE)
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
