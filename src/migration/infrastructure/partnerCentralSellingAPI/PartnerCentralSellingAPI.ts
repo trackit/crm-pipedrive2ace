@@ -96,12 +96,9 @@ export class PartnerCentralSellingAPIImpl implements PartnerCentralSellingAPI {
         OtherCompetitorNames: opportunity.otherCompetitorNames,
         OtherSolutionDescription: opportunity.otherSolutions,
       },
-      LifeCycle: {
-        Stage: opportunity.stage,
-        TargetCloseDate: opportunity.targetCloseDate,
-      },
       Customer: {
         Account: {
+          AwsAccountId: opportunity.awsAccountId,
           CompanyName: opportunity.company.name,
           Industry: opportunity.company.industry,
           WebsiteUrl: opportunity.company.website,
@@ -123,10 +120,11 @@ export class PartnerCentralSellingAPIImpl implements PartnerCentralSellingAPI {
         ],
       },
       Origin: opportunity.origin,
-      PrimaryNeedsFromAws: opportunity.primaryNeedsFromAws === null || opportunity.primaryNeedsFromAws.length === 0 ? undefined : opportunity.primaryNeedsFromAws,
+      PrimaryNeedsFromAws: !opportunity.primaryNeedsFromAws || opportunity.primaryNeedsFromAws.length === 0 ? [] : opportunity.primaryNeedsFromAws,
       OpportunityType: opportunity.type,
       Marketing: {
         Source: opportunity.marketingSource,
+        AwsFundingUsed: opportunity.marketingSource !== 'None' ? opportunity.awsFundingUsed : undefined,
       }
     }
 
@@ -138,10 +136,20 @@ export class PartnerCentralSellingAPIImpl implements PartnerCentralSellingAPI {
         Identifier: opportunityIdToUpdate,
       }));
 
+      if (!currentState) {
+        throw new Error(`Opportunity with ID ${opportunityIdToUpdate} not found`);
+      }
+
+      const currentStage = currentState.LifeCycle.ReviewStatus === 'Approved' ? opportunity.stage : currentState.LifeCycle.Stage;
+
       const command = new UpdateOpportunityCommand({
         Catalog: catalog,
         Identifier: opportunityIdToUpdate,
         LastModifiedDate: currentState.LastModifiedDate,
+        LifeCycle: {
+          Stage: currentStage,
+          TargetCloseDate: opportunity.targetCloseDate,
+        },
         ...opportunityDetails,
       });
 
@@ -196,7 +204,20 @@ export class PartnerCentralSellingAPIImpl implements PartnerCentralSellingAPI {
     } else {
       const command = new CreateOpportunityCommand({
         Catalog: catalog,
-        ...opportunityDetails
+        LifeCycle: {
+          Stage: 'Prospect',
+          TargetCloseDate: opportunity.targetCloseDate,
+        },
+        ...opportunityDetails,
+        OpportunityTeam: [
+          {
+            Email: opportunity.opportunityTeam.email,
+            FirstName: opportunity.opportunityTeam.firstName,
+            LastName: opportunity.opportunityTeam.lastName,
+            BusinessTitle: opportunity.opportunityTeam.businessTitle,
+            Phone: opportunity.opportunityTeam.phone,
+          }
+        ]
       });
 
       const createResult = await this.client.send(command);

@@ -7,6 +7,7 @@ import {
   PersonsApi,
   StagesApi,
   UpsertNoteResponse,
+  UsersApi,
 } from 'pipedrive/v1';
 import {
   OrganizationsApi
@@ -18,6 +19,7 @@ import { PipedrivePerson } from '../../datastructures/PipedrivePerson';
 import { PipedriveOrganizationField } from '../../datastructures/PipedriveOrganizationField';
 import { globalConfig } from '../../../config';
 import { PipedriveNote } from '../../datastructures/PipedriveNote';
+import { PipedriveUser } from '../../datastructures/PipedriveUser';
 
 export class PipedriveAPIImpl implements PipedriveAPI {
   private readonly dealFieldsClient: DealFieldsApi;
@@ -25,6 +27,7 @@ export class PipedriveAPIImpl implements PipedriveAPI {
   private readonly organizationClient: OrganizationsApi;
   private readonly organizationFieldClient: OrganizationFieldsApi;
   private readonly personClient: PersonsApi;
+  private readonly userClient: UsersApi;
   private readonly noteClient: NotesApi;
 
   constructor(apiKey: string) {
@@ -35,6 +38,7 @@ export class PipedriveAPIImpl implements PipedriveAPI {
     this.organizationClient = new OrganizationsApi(configuration);
     this.organizationFieldClient = new OrganizationFieldsApi(configuration);
     this.personClient = new PersonsApi(configuration);
+    this.userClient = new UsersApi(configuration);
     this.noteClient = new NotesApi(configuration);
   }
 
@@ -120,10 +124,10 @@ export class PipedriveAPIImpl implements PipedriveAPI {
       name: organization.data.name,
       address_country: address?.country,
       address_locality: address?.locality,
-      address_route: address.route,
-      address_street_number: address.street_number,
-      address_postal_code: address.postal_code,
-      address_admin_area_level_1: address.admin_area_level_1,
+      address_route: address?.route,
+      address_street_number: address?.street_number,
+      address_postal_code: address?.postal_code,
+      address_admin_area_level_1: address?.admin_area_level_1,
       custom_fields: organization.data['custom_fields'],
     }
   }
@@ -137,6 +141,16 @@ export class PipedriveAPIImpl implements PipedriveAPI {
       phone: person.data.phone.find((phone) => phone.primary) !== undefined ? person.data.phone.find((phone) => phone.primary).value : person.data.phone[0]?.value,
       first_name: person.data.first_name,
       last_name: person.data.last_name
+    }
+  }
+
+  async getUser(id: number): Promise<PipedriveUser> {
+    const user = await this.userClient.getUser({ id });
+
+    return {
+      id: user.data.id,
+      name: user.data.name,
+      email: user.data.email,
     }
   }
 }

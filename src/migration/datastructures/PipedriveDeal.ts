@@ -1,5 +1,6 @@
 export interface PipedriveDeal {
   id: number,
+  owner_id: number,
   title: string,
   stage_id: number,
   currency: string,

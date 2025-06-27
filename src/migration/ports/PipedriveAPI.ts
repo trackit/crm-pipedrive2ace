@@ -4,6 +4,7 @@ import { PipedriveOrganization } from '../datastructures/PipedriveOrganization';
 import { PipedrivePerson } from '../datastructures/PipedrivePerson';
 import { PipedriveOrganizationField } from '../datastructures/PipedriveOrganizationField';
 import { PipedriveNote } from '../datastructures/PipedriveNote';
+import { PipedriveUser } from '../datastructures/PipedriveUser';
 
 export interface PipedriveAPI {
   getDealFields: () => Promise<PipedriveDealField[]>;

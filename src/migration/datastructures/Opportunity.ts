@@ -587,8 +587,19 @@ export interface OpportunityCompany {
   industry: OpportunityIndustry,
 }
 
+export interface OpportunityTeam {
+  firstName: string,
+  lastName: string,
+  email: string,
+  phone: string,
+  businessTitle: string,
+}
+
+export type OpportunityAwsFundingUsed = 'Yes' | 'No';
+
 export interface Opportunity {
   id?: string,
+  awsAccountId: string,
   updateTime: string,
   dealId: number,
   title: string,
@@ -606,6 +617,8 @@ export interface Opportunity {
   salesActivities: OpportunitySalesActivity[],
   type: OpportunityType,
   marketingSource: OpportunityMarketingSource,
+  awsFundingUsed: OpportunityAwsFundingUsed,
+  opportunityTeam: OpportunityTeam,
   solutions: string[],
   otherSolutions: string,
   products: string[],

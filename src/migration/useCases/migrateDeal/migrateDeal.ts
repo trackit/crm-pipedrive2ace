@@ -3,9 +3,7 @@ import { PartnerCentralSellingAPI } from '../../ports/PartnerCentralSellingAPI';
 import * as util from 'node:util';
 import { PipedriveAPI } from '../../ports/PipedriveAPI';
 import { PipedriveDealField } from '../../datastructures/PipedriveDealField';
-import {
-  globalConfig,
-} from '../../../config';
+import { globalConfig } from '../../../config';
 import { setNestedField } from '../../../shared/FieldUtils';
 import { PipedriveOrganization } from '../../datastructures/PipedriveOrganization';
 import { PipedrivePerson } from '../../datastructures/PipedrivePerson';
@@ -17,6 +15,7 @@ import {
   OpportunityCompany,
   OpportunityCompanyContact,
   OpportunityStage,
+  OpportunityTeam,
 } from '../../datastructures/Opportunity';
 import { ValidationException } from '@aws-sdk/client-partnercentral-selling';
 
@@ -68,7 +67,7 @@ export class MigrateDealUseCaseImpl implements MigrateDealUseCase {
 
       if (e instanceof ValidationException) {
         console.error("Validation error: ", e);
-        await this.updateStatusInNote(args.dealInfo.id, false, null, e.ErrorList.map(error => `❌ ${error.Message}`).join('<br/>'));
+        await this.updateStatusInNote(args.dealInfo.id, false, null, e.ErrorList.map(error => `❌ ${error.Message}`).join(' | '));
       } else {
         console.error("Unknown error: ", e);
         await this.updateStatusInNote(args.dealInfo.id, false, null, "❌ Unknown error: this is mostly an error in the system, please contact the developer.");
@@ -119,7 +118,7 @@ export class MigrateDealUseCaseImpl implements MigrateDealUseCase {
       console.info('Not syncing with ACE');
       return false;
     } else {
-      console.warn('Unknown value for sync field, not syncing', syncValue);
+      console.warn('Unknown sync field value, not syncing', syncValue);
       return false;
     }
   }
@@ -129,6 +128,7 @@ export class MigrateDealUseCaseImpl implements MigrateDealUseCase {
       dealId: dealDefinition.id,
       title: dealDefinition.title,
       stage: null,
+      awsAccountId: null,
       businessProblem: null,
       company: null,
       competitorName: null,
@@ -148,17 +148,25 @@ export class MigrateDealUseCaseImpl implements MigrateDealUseCase {
       salesActivities: null,
       type: null,
       marketingSource: null,
+      awsFundingUsed: null,
       solutions: null,
       otherSolutions: null,
       products: null,
+      opportunityTeam: null,
     };
 
     const dealFieldsDefinitions = await this.pipedriveApi.getDealFields();
     const organizationDefinition = await this.pipedriveApi.getOrganization(dealDefinition.org_id);
     const organizationFieldsDefinition = await this.pipedriveApi.getOrganizationFields();
     const personDefinition = await this.pipedriveApi.getPerson(dealDefinition.person_id);
+    const userId = dealDefinition.owner_id;
+
+    if (!dealFieldsDefinitions || !organizationDefinition || !organizationFieldsDefinition || !personDefinition) {
+      throw new Error('Unable to fetch all necessary definitions from Pipedrive');
+    }
 
     this.mapOrganization(opportunity, dealDefinition, dealFieldsDefinitions, organizationDefinition, organizationFieldsDefinition, personDefinition);
+    this.mapCreator(opportunity, userId);
     this.mapStage(opportunity, dealDefinition);
     this.mapGenericFields(opportunity, dealDefinition, dealFieldsDefinitions);
     this.mapSolutions(opportunity);
@@ -302,6 +310,23 @@ export class MigrateDealUseCaseImpl implements MigrateDealUseCase {
     }
 
     opportunity.company = organizationMapped;
+  }
+
+  private mapCreator(opportunity: Opportunity, userId: number): void {
+    const user = globalConfig.users.find((user) => user.id === userId);
+
+    if (!user) {
+      console.warn("Unable to find user in global config", userId);
+      return;
+    }
+
+    opportunity.opportunityTeam = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      phone: user.phone,
+      businessTitle: 'PartnerAccountManager',
+    };
   }
 
   private mapStage(opportunity: Opportunity, dealDefinition: PipedriveDeal): void {

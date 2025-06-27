@@ -53,7 +53,7 @@ const role = new aws.iam.Role("pipedrive-to-partner-central-selling-role", {
   }
 });
 
-export const lambda = new sst.aws.Function("pipedrive-to-partner-central-selling", {
+export const lambda = new sst.aws.Function("pipedrive-crm", {
   url: true,
   name: 'pipedrive-to-partner-central-selling',
   runtime: 'nodejs20.x',
