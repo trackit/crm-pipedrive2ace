@@ -125,6 +125,19 @@ export interface StageMapping {
   wonPcsValue: string,
 }
 
+export interface User {
+  // The user ID in Pipedrive.
+  id: number,
+  // The user first name.
+  firstName: string,
+  // The user last name.
+  lastName: string,
+  // The user email.
+  email: string,
+  // The user phone.
+  phone: string,
+}
+
 // Represents the global configuration.
 export interface GlobalConfig {
   // Field mappings for PCS Company.
@@ -142,6 +155,8 @@ export interface GlobalConfig {
   }
   // Global configuration for stages
   stageMapping: StageMapping,
+  // Pipedrive users mapping to fill Opportunity team.
+  users: User[],
   // User ID used to send the note feedback to the deal in Pipedrive.
   noteUserId: number,
   // The partner name used in the opportunity.
